@@ -1,0 +1,5 @@
+watchdog==0.8.3
+pytest==2.9.2
+mock==2.0.0
+picamera==1.1.0
+hug==2.0.2
