@@ -1,27 +1,29 @@
 # Import smtplib for the actual sending function
 import smtplib
-import hug
 
 # Import the email modules we'll need
 from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 
-@hug.cli()
-def sendMail():
-# Open a plain text file for reading.  For this example, assume that
-# the text file contains only ASCII characters.
-    # Create a text/plain message
-    msg = MIMEText("Coucouc de nico")
 
+def sendMail(stream, email_adress):
+# Create the container (outer) email message.
+    msg = MIMEMultipart()
+    msg['Subject'] = 'Photo from Raspberry'
 # me == the sender's email address
-# you == the recipient's email address
-    msg['Subject'] = 'The contents of mon test'
-    msg['From'] = 'nicolassavois@yahoo.fr'
-    msg['To'] = 'nicolas.savois@gmail.com'
+# family = the list of all recipients' email addresses
+    msg['From'] = 'nicolas.savois@free.fr'
+    msg['To'] = email_adress
+    msg.preamble = 'Photo from Raspberry'
 
-# Send the message via our own SMTP server.
+    if stream :
+        stream.seek(0)
+        img = MIMEImage(stream.read())
+        msg.attach(img)
+
+# Send the email via our own SMTP server.
     s = smtplib.SMTP('localhost')
     s.send_message(msg)
     s.quit()
 
-if __name__ == '__main__':
-    sendMail.interface.cli()
